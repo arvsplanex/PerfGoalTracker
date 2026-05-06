@@ -6,181 +6,48 @@
     <title>CBSC 2026 Performance Tracker</title>
     <style>
         :root {
-            --primary: #c00000; /* Canon Red */
+            --primary: #c00000;
             --bg-color: #f4f7f6;
             --card-bg: #ffffff;
             --text-main: #333333;
             --border-light: #e0e0e0;
         }
         
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            margin: 0;
-            padding: 20px;
-        }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 20px; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .header h1 { color: var(--primary); margin-bottom: 5px; }
+        .container { display: flex; gap: 20px; max-width: 1400px; margin: 0 auto; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-
-        .container {
-            display: flex;
-            gap: 20px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        /* Results & Database Section */
-        .sidebar {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .score-panel {
-            background: #2c3e50;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            position: sticky;
-            top: 20px;
-        }
-
+        /* Sidebar / Results */
+        .sidebar { flex: 1; display: flex; flex-direction: column; gap: 20px; }
+        .score-panel { background: #2c3e50; color: white; padding: 20px; border-radius: 8px; text-align: center; position: sticky; top: 20px; }
         .score-panel h2 { margin: 0; font-size: 48px; }
         .score-panel p { margin: 5px 0 10px 0; font-size: 14px; opacity: 0.8; }
-
-        .score-summary {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 15px;
-            border-radius: 6px;
-            text-align: left;
-            font-size: 13px;
-            margin-bottom: 20px;
-            line-height: 1.8;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
         
-        .score-summary span {
-            float: right;
-            font-weight: bold;
-            color: #ffd700;
-        }
+        .score-summary { background: rgba(0, 0, 0, 0.2); padding: 15px; border-radius: 6px; text-align: left; font-size: 13px; margin-bottom: 20px; line-height: 1.8; border: 1px solid rgba(255,255,255,0.1); }
+        .score-summary span { float: right; font-weight: bold; color: #ffd700; }
 
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            width: 100%;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
+        .btn { background-color: var(--primary); color: white; border: none; padding: 12px 20px; width: 100%; border-radius: 4px; font-size: 16px; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
         .btn:hover { background-color: #a00000; }
 
-        .btn-secondary {
-            background-color: #7f8c8d;
-            padding: 10px 15px;
-            font-size: 14px;
-        }
-
-        .btn-secondary:hover { background-color: #636e72; }
-        
-        .btn-privacy-active {
-            background-color: #27ae60 !important;
-        }
-
-        .db-panel {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            max-height: 500px;
-            overflow-y: auto;
-            transition: opacity 0.3s ease;
-        }
-
-        .db-panel h3 { margin-top: 0; border-bottom: 2px solid var(--border-light); padding-bottom: 10px;}
-
-        .record-card {
-            border: 1px solid var(--border-light);
-            padding: 10px;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            font-size: 14px;
-            position: relative;
-        }
-
+        /* History Panel */
+        .db-panel { background: var(--card-bg); padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .db-panel h3 { margin-top: 0; border-bottom: 2px solid var(--border-light); padding-bottom: 10px; font-size: 16px;}
+        .record-card { border: 1px solid var(--border-light); padding: 10px; border-radius: 4px; margin-bottom: 10px; font-size: 14px; position: relative; background: #fafafa; cursor: pointer;}
+        .record-card:hover { border-color: var(--primary); }
         .record-header { font-weight: bold; color: var(--primary); margin-bottom: 5px; }
-        .delete-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #ff4444;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-            padding: 3px 8px;
-        }
+        .delete-btn { position: absolute; top: 10px; right: 10px; background: #ff4444; color: white; border: none; border-radius: 3px; cursor: pointer; font-size: 12px; padding: 3px 8px; }
 
         /* Form Section */
-        .form-section {
-            flex: 2;
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-        }
-
-        .form-group {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .form-group input, .form-group select {
-            padding: 10px;
-            border: 1px solid var(--border-light);
-            border-radius: 4px;
-            font-size: 16px;
-            flex: 1;
-        }
-
-        .goal-card {
-            border: 1px solid var(--border-light);
-            border-radius: 6px;
-            margin-bottom: 15px;
-            padding: 15px;
-            background-color: #fafafa;
-        }
-
-        .goal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
+        .form-section { flex: 2; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .form-group { display: flex; gap: 15px; margin-bottom: 20px; background: #fdfdfd; padding: 15px; border-radius: 6px; border: 1px solid var(--border-light); }
+        .form-group input, .form-group select { padding: 10px; border: 1px solid var(--border-light); border-radius: 4px; font-size: 16px; flex: 1; font-weight: bold;}
+        .goal-card { border: 1px solid var(--border-light); border-radius: 6px; margin-bottom: 15px; padding: 15px; background-color: #fafafa; }
+        .goal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .goal-header h3 { margin: 0; font-size: 16px; color: #2c3e50; }
         .goal-input { width: 100px; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; }
         details { background: #fff; padding: 10px; border-radius: 4px; border: 1px solid var(--border-light); font-size: 14px; line-height: 1.5; }
         summary { font-weight: bold; cursor: pointer; color: var(--primary); outline: none; }
-
         .kpi-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
     </style>
 </head>
@@ -199,14 +66,6 @@
                 <h2 id="finalScoreDisplay">0.00</h2>
                 <p id="gradeText" style="font-weight: bold; color: #ffd700; margin-bottom: 15px;">-</p>
                 
-                <!-- Action Buttons -->
-                <button class="btn" onclick="saveRecord()">Save to Database</button>
-                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
-                    <button class="btn btn-secondary" id="privacyBtn" onclick="togglePrivacy()" style="flex: 1;">Privacy: OFF</button>
-                    <button class="btn btn-secondary" onclick="generateScorecard()" style="flex: 1; background-color: #34495e;">📄 PDF Scorecard</button>
-                </div>
-
-                <!-- Live Goal Summary -->
                 <div class="score-summary">
                     <div style="border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; text-align: center;">Live Summary</div>
                     <div>1. Customer Success <span id="sumG1">-</span></div>
@@ -218,12 +77,15 @@
                     <div>7. Knowledge Enable. <span id="sumG7">-</span></div>
                     <div>8. Security / Comp. <span id="sumG8">-</span></div>
                 </div>
+
+                <button class="btn" onclick="saveRecord()">Save to Database</button>
             </div>
 
+            <!-- Dynamic Privacy History Panel -->
             <div class="db-panel" id="dbPanel">
-                <h3>Saved Evaluations</h3>
+                <h3 id="historyTitle">Employee History</h3>
                 <div id="recordsContainer">
-                    <!-- Records load here -->
+                    <p style='color:#7f8c8d; font-size:13px;'>Type a name to view their past evaluations.</p>
                 </div>
             </div>
         </div>
@@ -231,139 +93,72 @@
         <!-- Form Section -->
         <div class="form-section">
             <div class="form-group">
-                <input type="text" id="empName" placeholder="Employee Name (e.g. Jean)" required>
-                <select id="evalMonth">
-                    <option value="" disabled selected>Select Month</option>
-                    <option value="January">January</option>
-                    <option value="February">February</option>
-                    <option value="March">March</option>
-                    <option value="April">April</option>
-                    <option value="May">May</option>
-                    <option value="June">June</option>
-                    <option value="July">July</option>
-                    <option value="August">August</option>
-                    <option value="September">September</option>
-                    <option value="October">October</option>
-                    <option value="November">November</option>
-                    <option value="December">December</option>
-                </select>
+                <div style="flex: 1;">
+                    <label style="font-size: 12px; color: #555; font-weight: bold; display: block; margin-bottom: 5px;">Employee Name (Auto-Search)</label>
+                    <input type="text" id="empName" placeholder="Type name (e.g. Jean)" autocomplete="off" style="width: 100%; box-sizing: border-box;">
+                </div>
+                <div style="flex: 1;">
+                    <label style="font-size: 12px; color: #555; font-weight: bold; display: block; margin-bottom: 5px;">Evaluation Month</label>
+                    <select id="evalMonth" style="width: 100%; box-sizing: border-box;">
+                        <option value="" disabled selected>Select Month...</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
             </div>
 
             <!-- G1 -->
             <div class="goal-card">
                 <div class="goal-header">
                     <h3>1. Customer Success (10%)</h3>
-                    <select class="goal-input score-calc" id="g1">
-                        <option value="0" selected>Score...</option>
-                        <option value="5">5 - Outst.</option>
-                        <option value="4">4 - Exceeds</option>
-                        <option value="3">3 - Meets</option>
-                        <option value="2">2 - Mostly</option>
-                        <option value="1">1 - Fails</option>
-                    </select>
+                    <select class="goal-input score-calc" id="g1"><option value="0" selected>Score...</option><option value="5">5 - Outst.</option><option value="4">4 - Exceeds</option><option value="3">3 - Meets</option><option value="2">2 - Mostly</option><option value="1">1 - Fails</option></select>
                 </div>
-                <details>
-                    <summary>View Metrics & Definitions</summary>
-                    <p><strong>NPS Target: > 70</strong><br>
-                    <strong>5:</strong> >= 80 NPS<br>
-                    <strong>4:</strong> >= 75 NPS<br>
-                    <strong>3:</strong> >= 70 NPS<br>
-                    <strong>2:</strong> >= 65 NPS<br>
-                    <strong>1:</strong> <= 64 NPS</p>
-                </details>
             </div>
 
             <!-- G2 -->
             <div class="goal-card">
                 <div class="goal-header">
                     <h3>2. Employee Engagement (10%)</h3>
-                    <select class="goal-input score-calc" id="g2">
-                        <option value="0" selected>Score...</option>
-                        <option value="5">5</option>
-                        <option value="4">4</option>
-                        <option value="3">3</option>
-                        <option value="2">2</option>
-                        <option value="1">1</option>
-                    </select>
+                    <select class="goal-input score-calc" id="g2"><option value="0" selected>Score...</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
                 </div>
-                <details>
-                    <summary>View Metrics & Definitions</summary>
-                    <p><strong>Point System:</strong> Major=1pt, Commitee=1pt, Minor=0.5pt<br>
-                    <strong>5:</strong> 4 points<br>
-                    <strong>4:</strong> 3 to 3.5 points<br>
-                    <strong>3:</strong> 2 to 2.5 points<br>
-                    <strong>2:</strong> 1 to 1.5 points<br>
-                    <strong>1:</strong> 0 points</p>
-                </details>
             </div>
 
             <!-- G3 -->
             <div class="goal-card">
                 <div class="goal-header">
                     <h3>3. CSR / KSEM Support (5%)</h3>
-                    <select class="goal-input score-calc" id="g3">
-                        <option value="0" selected>Score...</option>
-                        <option value="5">5</option>
-                        <option value="4">4</option>
-                        <option value="3">3</option>
-                        <option value="2">2</option>
-                        <option value="1">1</option>
-                    </select>
+                    <select class="goal-input score-calc" id="g3"><option value="0" selected>Score...</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
                 </div>
-                <details>
-                    <summary>View Metrics & Definitions</summary>
-                    <p><strong>Point System:</strong> Volunteering=1pt, Commitee=1pt, Donation=0.5pt<br>
-                    <strong>5:</strong> 4 points<br>
-                    <strong>4:</strong> 3 to 3.5 points<br>
-                    <strong>3:</strong> 2 to 2.5 points<br>
-                    <strong>2:</strong> 1 to 1.5 points<br>
-                    <strong>1:</strong> 0 points</p>
-                </details>
             </div>
 
             <!-- G4 KPI -->
             <div class="goal-card" style="border-left: 4px solid var(--primary);">
                 <div class="goal-header">
-                    <h3>4. KPI Delivery Accountability (45% Total Weight)</h3>
+                    <h3>4. KPI Delivery Accountability (45% Total)</h3>
                     <span style="font-weight:bold; color:var(--primary);">Sub-Score: <span id="kpiSubScore">0.00</span></span>
                 </div>
-                <details style="margin-bottom: 10px;">
-                    <summary>View KPI Metrics & Definitions</summary>
-                    <p><strong>Accuracy (40%):</strong> 5 = 0 Escalations/Outages. 3 = Minor Misses. 1 = Outage/P1.<br>
-                    <strong>Management (30%):</strong> 5 = 97-100%. 4 = 94-96%. 3 = 90-93%. 2 = 85-89%. 1 = &lt;85%.<br>
-                    <strong>Quality (30%):</strong> 5 = 97-100% Audit & 12hr format. 4 = 94-96%. 3 = 90-93%. 2 = 85-89%. 1 = &lt;85%.</p>
-                </details>
                 <div class="kpi-grid">
                     <div>
                         <label style="font-size: 12px; font-weight: bold;">Accuracy (40%)</label>
-                        <select class="goal-input score-calc" id="g4a" style="width: 100%;">
-                            <option value="0">Score...</option>
-                            <option value="5">5 (Zero Esc)</option>
-                            <option value="3">3 (Minor)</option>
-                            <option value="1">1 (Outage/P1)</option>
-                        </select>
+                        <select class="goal-input score-calc" id="g4a" style="width: 100%;"><option value="0">Score...</option><option value="5">5 (Zero Esc)</option><option value="3">3 (Minor)</option><option value="1">1 (Outage/P1)</option></select>
                     </div>
                     <div>
                         <label style="font-size: 12px; font-weight: bold;">Ticket Mgt (30%)</label>
-                        <select class="goal-input score-calc" id="g4b" style="width: 100%;">
-                            <option value="0">Score...</option>
-                            <option value="5">5 (97-100%)</option>
-                            <option value="4">4 (94-96%)</option>
-                            <option value="3">3 (90-93%)</option>
-                            <option value="2">2 (85-89%)</option>
-                            <option value="1">1 (&lt; 85%)</option>
-                        </select>
+                        <select class="goal-input score-calc" id="g4b" style="width: 100%;"><option value="0">Score...</option><option value="5">5 (97-100%)</option><option value="4">4 (94-96%)</option><option value="3">3 (90-93%)</option><option value="2">2 (85-89%)</option><option value="1">1 (< 85%)</option></select>
                     </div>
                     <div>
                         <label style="font-size: 12px; font-weight: bold;">Quality (30%)</label>
-                        <select class="goal-input score-calc" id="g4c" style="width: 100%;">
-                            <option value="0">Score...</option>
-                            <option value="5">5 (97-100%)</option>
-                            <option value="4">4 (94-96%)</option>
-                            <option value="3">3 (90-93%)</option>
-                            <option value="2">2 (85-89%)</option>
-                            <option value="1">1 (&lt; 85%)</option>
-                        </select>
+                        <select class="goal-input score-calc" id="g4c" style="width: 100%;"><option value="0">Score...</option><option value="5">5 (97-100%)</option><option value="4">4 (94-96%)</option><option value="3">3 (90-93%)</option><option value="2">2 (85-89%)</option><option value="1">1 (< 85%)</option></select>
                     </div>
                 </div>
             </div>
@@ -372,77 +167,64 @@
             <div class="goal-card">
                 <div class="goal-header">
                     <h3>5. Transformation / Change (10%)</h3>
-                    <select class="goal-input score-calc" id="g5">
-                        <option value="0">Score...</option>
-                        <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
-                    </select>
+                    <select class="goal-input score-calc" id="g5"><option value="0">Score...</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
                 </div>
-                <details><summary>View Metrics</summary><p><strong>5:</strong> Champion/Early Adopter. <strong>3:</strong> Adopts on deadline. <strong>1:</strong> Resists change.</p></details>
             </div>
 
             <!-- G6 -->
             <div class="goal-card">
                 <div class="goal-header">
                     <h3>6. Service Improvement (5%)</h3>
-                    <select class="goal-input score-calc" id="g6">
-                        <option value="0">Score...</option>
-                        <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
-                    </select>
+                    <select class="goal-input score-calc" id="g6"><option value="0">Score...</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
                 </div>
-                <details><summary>View Metrics</summary><p><strong>5:</strong> Innovator (builds automations). <strong>3:</strong> Flags risks early. <strong>1:</strong> Hides errors.</p></details>
             </div>
 
             <!-- G7 -->
             <div class="goal-card">
                 <div class="goal-header">
                     <h3>7. Knowledge Enablement (10%)</h3>
-                    <select class="goal-input score-calc" id="g7">
-                        <option value="0">Score...</option>
-                        <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
-                    </select>
+                    <select class="goal-input score-calc" id="g7"><option value="0">Score...</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
                 </div>
-                <details><summary>View Metrics</summary><p><strong>5:</strong> Updates 2-3 KBs/Runbooks. <strong>3:</strong> Shares workarounds in chat. <strong>1:</strong> Creates knowledge silos.</p></details>
             </div>
 
             <!-- G8 -->
             <div class="goal-card">
                 <div class="goal-header">
                     <h3>8. Security & Compliance (5%)</h3>
-                    <select class="goal-input score-calc" id="g8">
-                        <option value="0">Score...</option>
-                        <option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option>
-                    </select>
+                    <select class="goal-input score-calc" id="g8"><option value="0">Score...</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select>
                 </div>
-                <details><summary>View Metrics</summary><p><strong>5:</strong> 0% Phish EOY, 0 HR Connect Overdue, Proactive. <strong>4:</strong> 0% Phish EOY, 0 HR Connect. <strong>3:</strong> &lt; 10% Phish, Meets deadlines.</p></details>
             </div>
         </div>
     </div>
 
     <script>
-        // Real-time Calculation Logic
+        // Event Listeners for Calculation and Search
         const inputs = document.querySelectorAll('.score-calc');
         inputs.forEach(input => input.addEventListener('change', calculateScore));
+        
+        document.getElementById('empName').addEventListener('input', handleSearch);
+        document.getElementById('evalMonth').addEventListener('change', handleSearch);
+
+        const getV = id => parseFloat(document.getElementById(id).value) || 0;
 
         function calculateScore() {
-            const v = id => parseFloat(document.getElementById(id).value) || 0;
+            document.getElementById('sumG1').innerText = getV('g1') || '-';
+            document.getElementById('sumG2').innerText = getV('g2') || '-';
+            document.getElementById('sumG3').innerText = getV('g3') || '-';
+            document.getElementById('sumG5').innerText = getV('g5') || '-';
+            document.getElementById('sumG6').innerText = getV('g6') || '-';
+            document.getElementById('sumG7').innerText = getV('g7') || '-';
+            document.getElementById('sumG8').innerText = getV('g8') || '-';
 
-            document.getElementById('sumG1').innerText = v('g1') || '-';
-            document.getElementById('sumG2').innerText = v('g2') || '-';
-            document.getElementById('sumG3').innerText = v('g3') || '-';
-            document.getElementById('sumG5').innerText = v('g5') || '-';
-            document.getElementById('sumG6').innerText = v('g6') || '-';
-            document.getElementById('sumG7').innerText = v('g7') || '-';
-            document.getElementById('sumG8').innerText = v('g8') || '-';
-
-            const g4Score = (v('g4a') * 0.4) + (v('g4b') * 0.3) + (v('g4c') * 0.3);
+            const g4Score = (getV('g4a') * 0.4) + (getV('g4b') * 0.3) + (getV('g4c') * 0.3);
             const kpiFormatted = g4Score > 0 ? g4Score.toFixed(2) : '-';
             document.getElementById('kpiSubScore').innerText = kpiFormatted;
             document.getElementById('sumG4').innerText = kpiFormatted;
 
             const finalScore = 
-                (v('g1') * 0.10) + (v('g2') * 0.10) + (v('g3') * 0.05) + 
-                (g4Score * 0.45) + (v('g5') * 0.10) + (v('g6') * 0.05) + 
-                (v('g7') * 0.10) + (v('g8') * 0.05);
+                (getV('g1') * 0.10) + (getV('g2') * 0.10) + (getV('g3') * 0.05) + 
+                (g4Score * 0.45) + (getV('g5') * 0.10) + (getV('g6') * 0.05) + 
+                (getV('g7') * 0.10) + (getV('g8') * 0.05);
 
             document.getElementById('finalScoreDisplay').innerText = finalScore.toFixed(2);
 
@@ -456,161 +238,131 @@
             document.getElementById('gradeText').innerText = text;
         }
 
-        // Privacy Mode Logic
-        let isPrivacyOn = false;
-        function togglePrivacy() {
-            isPrivacyOn = !isPrivacyOn;
-            const dbPanel = document.getElementById('dbPanel');
-            const btn = document.getElementById('privacyBtn');
-            
-            if(isPrivacyOn) {
-                dbPanel.style.display = 'none';
-                btn.innerText = 'Privacy: ON (Safe)';
-                btn.classList.add('btn-privacy-active');
-            } else {
-                dbPanel.style.display = 'block';
-                btn.innerText = 'Privacy: OFF';
-                btn.classList.remove('btn-privacy-active');
-            }
-        }
+        // --- NEW SEARCH & AUTO-LOAD LOGIC ---
+        function handleSearch() {
+            const name = document.getElementById('empName').value.trim().toLowerCase();
+            const month = document.getElementById('evalMonth').value;
+            const db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
+            const container = document.getElementById('recordsContainer');
+            const title = document.getElementById('historyTitle');
 
-        // PDF Scorecard Generator - FIXED
-        function generateScorecard() {
-            const name = document.getElementById('empName').value || 'Employee';
-            const month = document.getElementById('evalMonth').value || 'Month';
-            const score = document.getElementById('finalScoreDisplay').innerText;
-            const grade = document.getElementById('gradeText').innerText;
-            const kpi = document.getElementById('kpiSubScore').innerText;
-
-            if (score === "0.00") {
-                alert("Please enter scores before generating a scorecard.");
+            if (name.length === 0) {
+                title.innerText = "Employee History";
+                container.innerHTML = "<p style='color:#7f8c8d; font-size:13px;'>Type a name to view their past evaluations.</p>";
                 return;
             }
 
-            const getVal = id => {
-                const el = document.getElementById(id);
-                return el.options[el.selectedIndex].text;
-            };
-
-            const printWin = window.open('', '_blank', 'width=800,height=800');
-            printWin.document.write(`
-                <html>
-                <head>
-                    <title>${name} - ${month} Scorecard</title>
-                    <style>
-                        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 40px; color: #333; }
-                        .header { text-align: center; border-bottom: 2px solid #c00000; padding-bottom: 20px; margin-bottom: 30px; }
-                        .header h1 { color: #c00000; margin: 0; font-size: 24px; }
-                        .header h2 { color: #555; margin: 5px 0 0 0; font-size: 18px; }
-                        .score-box { background: #f4f4f4; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd; }
-                        .score-box h2 { font-size: 48px; margin: 10px 0; color: #2c3e50; }
-                        .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
-                        .item { padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
-                        .label { font-weight: bold; color: #555; }
-                        .val { font-weight: bold; color: #2c3e50; }
-                        .footer { margin-top: 50px; text-align: center; color: #777; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px; }
-                        @media print { body { -webkit-print-color-adjust: exact; } }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>CBSC IT Operations - 2026 Performance Review</h1>
-                        <h2>${name} | ${month}</h2>
-                    </div>
-                    
-                    <div class="score-box">
-                        <p style="margin: 0; font-weight: bold; color: #777; text-transform: uppercase;">Final Weighted Rating</p>
-                        <h2>${score}</h2>
-                        <h3 style="margin: 0; color: #c00000;">${grade}</h3>
-                    </div>
-
-                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Goal Breakdown</h3>
-                    <div class="grid">
-                        <div class="item"><span class="label">1. Customer Success (10%)</span> <span class="val">${getVal('g1')}</span></div>
-                        <div class="item"><span class="label">2. Employee Engagement (10%)</span> <span class="val">${getVal('g2')}</span></div>
-                        <div class="item"><span class="label">3. CSR / KSEM Support (5%)</span> <span class="val">${getVal('g3')}</span></div>
-                        <div class="item"><span class="label">4. KPI Delivery Accountability (45%)</span> <span class="val">Sub-Score: ${kpi} / 5.00</span></div>
-                        <div class="item"><span class="label">5. Transformation & Change (10%)</span> <span class="val">${getVal('g5')}</span></div>
-                        <div class="item"><span class="label">6. Service Improvement (5%)</span> <span class="val">${getVal('g6')}</span></div>
-                        <div class="item"><span class="label">7. Knowledge Enablement (10%)</span> <span class="val">${getVal('g7')}</span></div>
-                        <div class="item"><span class="label">8. Security & Compliance (5%)</span> <span class="val">${getVal('g8')}</span></div>
-                    </div>
-
-                    <div class="footer">
-                        Generated securely via CBSC internal performance tracker.
-                    </div>
-                </body>
-                </html>
-            `);
+            title.innerText = `History for: ${document.getElementById('empName').value}`;
             
-            // Execute print safely from the parent window
-            printWin.document.close();
-            printWin.focus();
-            setTimeout(function() { printWin.print(); }, 500);
+            // Filter DB for typed name (Privacy Lock)
+            const userRecords = db.filter(r => r.name.toLowerCase() === name);
+            
+            if (userRecords.length === 0) {
+                container.innerHTML = "<p style='color:#7f8c8d; font-size:13px;'>No past records found for this employee.</p>";
+            } else {
+                container.innerHTML = "";
+                userRecords.sort((a,b) => b.id - a.id).forEach(rec => {
+                    container.innerHTML += `
+                        <div class="record-card" onclick="loadSpecificRecord('${rec.month}')">
+                            <button class="delete-btn" onclick="event.stopPropagation(); deleteRecord(${rec.id})">X</button>
+                            <div class="record-header">${rec.month}</div>
+                            <div><strong>Score:</strong> ${rec.score} | <strong>KPI:</strong> ${rec.kpi}</div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Auto-Load Data if Month matches
+            if (name && month) {
+                const specificRecord = userRecords.find(r => r.month === month);
+                if (specificRecord && specificRecord.raw) {
+                    // Load exact past dropdown choices
+                    document.getElementById('g1').value = specificRecord.raw.g1;
+                    document.getElementById('g2').value = specificRecord.raw.g2;
+                    document.getElementById('g3').value = specificRecord.raw.g3;
+                    document.getElementById('g4a').value = specificRecord.raw.g4a;
+                    document.getElementById('g4b').value = specificRecord.raw.g4b;
+                    document.getElementById('g4c').value = specificRecord.raw.g4c;
+                    document.getElementById('g5').value = specificRecord.raw.g5;
+                    document.getElementById('g6').value = specificRecord.raw.g6;
+                    document.getElementById('g7').value = specificRecord.raw.g7;
+                    document.getElementById('g8').value = specificRecord.raw.g8;
+                } else {
+                    // Month not evaluated yet, reset dropdowns for fresh entry
+                    resetScores();
+                }
+                calculateScore();
+            }
         }
 
-        // Database Logic
+        function loadSpecificRecord(month) {
+            document.getElementById('evalMonth').value = month;
+            handleSearch(); // Triggers the auto-load logic above
+        }
+
+        function resetScores() {
+            inputs.forEach(input => input.value = "0");
+        }
+
+        // --- UPDATED DATABASE SAVE LOGIC ---
         function saveRecord() {
-            const name = document.getElementById('empName').value;
+            const name = document.getElementById('empName').value.trim();
             const month = document.getElementById('evalMonth').value;
             const score = document.getElementById('finalScoreDisplay').innerText;
             const kpiSub = document.getElementById('kpiSubScore').innerText;
 
             if(!name || !month || score === "0.00") {
-                alert("Please enter a Name, select a Month, and input scores before saving.");
+                alert("Please enter a Name, select a Month, and fill out scores before saving.");
                 return;
             }
 
+            // Create record with 'raw' data so it can be restored exactly
             const record = {
                 id: Date.now(),
                 name: name,
                 month: month,
                 score: score,
                 kpi: kpiSub,
-                date: new Date().toLocaleDateString()
+                date: new Date().toLocaleDateString(),
+                raw: {
+                    g1: getV('g1'), g2: getV('g2'), g3: getV('g3'),
+                    g4a: getV('g4a'), g4b: getV('g4b'), g4c: getV('g4c'),
+                    g5: getV('g5'), g6: getV('g6'), g7: getV('g7'), g8: getV('g8')
+                }
             };
 
             let db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
-            db.push(record);
-            localStorage.setItem('cbsc_evals', JSON.stringify(db));
             
-            alert(`${name}'s evaluation for ${month} saved successfully!`);
-            loadRecords();
-        }
-
-        function loadRecords() {
-            const container = document.getElementById('recordsContainer');
-            const db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
+            // Check if record for Name+Month already exists. If yes, overwrite it.
+            const existingIndex = db.findIndex(r => r.name.toLowerCase() === name.toLowerCase() && r.month === month);
             
-            if(db.length === 0) {
-                container.innerHTML = "<p style='color:#7f8c8d; font-size:14px;'>No records found. Saved evaluations will appear here.</p>";
-                return;
+            if (existingIndex >= 0) {
+                db[existingIndex] = record; // Overwrite
+            } else {
+                db.push(record); // Insert new
             }
 
-            container.innerHTML = "";
-            db.sort((a,b) => b.id - a.id).forEach(rec => {
-                container.innerHTML += `
-                    <div class="record-card">
-                        <button class="delete-btn" onclick="deleteRecord(${rec.id})">X</button>
-                        <div class="record-header">${rec.name} - ${rec.month}</div>
-                        <div><strong>Final Score:</strong> ${rec.score}</div>
-                        <div style="font-size: 12px; color: #555;">KPI Sub-Score: ${rec.kpi}</div>
-                        <div style="font-size: 10px; color: #999; margin-top:5px;">Saved on: ${rec.date}</div>
-                    </div>
-                `;
-            });
+            localStorage.setItem('cbsc_evals', JSON.stringify(db));
+            
+            alert(`Evaluation for ${name} (${month}) saved successfully!`);
+            handleSearch(); // Refresh the history panel
         }
 
         function deleteRecord(id) {
-            if(confirm("Are you sure you want to delete this record?")) {
+            if(confirm("Are you sure you want to delete this specific record?")) {
                 let db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
                 db = db.filter(rec => rec.id !== id);
                 localStorage.setItem('cbsc_evals', JSON.stringify(db));
-                loadRecords();
+                resetScores();
+                calculateScore();
+                handleSearch();
             }
         }
 
-        window.onload = loadRecords;
+        // Initialize empty state
+        window.onload = function() {
+            handleSearch();
+        };
     </script>
 </body>
 </html>
