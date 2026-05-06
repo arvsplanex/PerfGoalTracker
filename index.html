@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,7 +38,7 @@
             margin: 0 auto;
         }
 
-        /* Results & Database Section (Now on the Left) */
+        /* Results & Database Section */
         .sidebar {
             flex: 1;
             display: flex;
@@ -60,7 +59,6 @@
         .score-panel h2 { margin: 0; font-size: 48px; }
         .score-panel p { margin: 5px 0 10px 0; font-size: 14px; opacity: 0.8; }
 
-        /* New Live Summary Box */
         .score-summary {
             background: rgba(0, 0, 0, 0.2);
             padding: 15px;
@@ -88,9 +86,22 @@
             font-size: 16px;
             cursor: pointer;
             font-weight: bold;
+            margin-bottom: 10px;
         }
 
         .btn:hover { background-color: #a00000; }
+
+        .btn-secondary {
+            background-color: #7f8c8d;
+            padding: 10px 15px;
+            font-size: 14px;
+        }
+
+        .btn-secondary:hover { background-color: #636e72; }
+        
+        .btn-privacy-active {
+            background-color: #27ae60 !important;
+        }
 
         .db-panel {
             background: var(--card-bg);
@@ -99,6 +110,7 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
             max-height: 500px;
             overflow-y: auto;
+            transition: opacity 0.3s ease;
         }
 
         .db-panel h3 { margin-top: 0; border-bottom: 2px solid var(--border-light); padding-bottom: 10px;}
@@ -126,7 +138,7 @@
             padding: 3px 8px;
         }
 
-        /* Form Section (Now on the Right) */
+        /* Form Section */
         .form-section {
             flex: 2;
             background: var(--card-bg);
@@ -149,7 +161,6 @@
             flex: 1;
         }
 
-        /* Goal Cards */
         .goal-card {
             border: 1px solid var(--border-light);
             border-radius: 6px;
@@ -165,42 +176,12 @@
             margin-bottom: 10px;
         }
 
-        .goal-header h3 {
-            margin: 0;
-            font-size: 16px;
-            color: #2c3e50;
-        }
+        .goal-header h3 { margin: 0; font-size: 16px; color: #2c3e50; }
+        .goal-input { width: 100px; padding: 8px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; }
+        details { background: #fff; padding: 10px; border-radius: 4px; border: 1px solid var(--border-light); font-size: 14px; line-height: 1.5; }
+        summary { font-weight: bold; cursor: pointer; color: var(--primary); outline: none; }
 
-        .goal-input {
-            width: 100px;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            font-weight: bold;
-        }
-
-        details {
-            background: #fff;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid var(--border-light);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        summary {
-            font-weight: bold;
-            cursor: pointer;
-            color: var(--primary);
-            outline: none;
-        }
-
-        .kpi-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 10px;
-            margin-top: 10px;
-        }
+        .kpi-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -211,13 +192,20 @@
     </div>
 
     <div class="container">
-        <!-- Sidebar / Results (Moved to Left) -->
+        <!-- Sidebar / Results -->
         <div class="sidebar">
             <div class="score-panel">
                 <p>FINAL CALCULATED SCORE</p>
                 <h2 id="finalScoreDisplay">0.00</h2>
                 <p id="gradeText" style="font-weight: bold; color: #ffd700; margin-bottom: 15px;">-</p>
                 
+                <!-- Action Buttons -->
+                <button class="btn" onclick="saveRecord()">Save to Database</button>
+                <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                    <button class="btn btn-secondary" id="privacyBtn" onclick="togglePrivacy()" style="flex: 1;">Privacy: OFF</button>
+                    <button class="btn btn-secondary" onclick="generateScorecard()" style="flex: 1; background-color: #34495e;">📄 PDF Scorecard</button>
+                </div>
+
                 <!-- Live Goal Summary -->
                 <div class="score-summary">
                     <div style="border-bottom: 1px solid rgba(255,255,255,0.2); margin-bottom: 5px; padding-bottom: 5px; font-weight: bold; text-align: center;">Live Summary</div>
@@ -230,11 +218,9 @@
                     <div>7. Knowledge Enable. <span id="sumG7">-</span></div>
                     <div>8. Security / Comp. <span id="sumG8">-</span></div>
                 </div>
-
-                <button class="btn" onclick="saveRecord()">Save to Database</button>
             </div>
 
-            <div class="db-panel">
+            <div class="db-panel" id="dbPanel">
                 <h3>Saved Evaluations</h3>
                 <div id="recordsContainer">
                     <!-- Records load here -->
@@ -242,7 +228,7 @@
             </div>
         </div>
 
-        <!-- Form Section (Moved to Right) -->
+        <!-- Form Section -->
         <div class="form-section">
             <div class="form-group">
                 <input type="text" id="empName" placeholder="Employee Name (e.g. Jean)" required>
@@ -440,7 +426,6 @@
         function calculateScore() {
             const v = id => parseFloat(document.getElementById(id).value) || 0;
 
-            // Update Summary Panel Live
             document.getElementById('sumG1').innerText = v('g1') || '-';
             document.getElementById('sumG2').innerText = v('g2') || '-';
             document.getElementById('sumG3').innerText = v('g3') || '-';
@@ -449,26 +434,18 @@
             document.getElementById('sumG7').innerText = v('g7') || '-';
             document.getElementById('sumG8').innerText = v('g8') || '-';
 
-            // Calculate KPI Goal 4 (40%, 30%, 30%)
             const g4Score = (v('g4a') * 0.4) + (v('g4b') * 0.3) + (v('g4c') * 0.3);
             const kpiFormatted = g4Score > 0 ? g4Score.toFixed(2) : '-';
             document.getElementById('kpiSubScore').innerText = kpiFormatted;
             document.getElementById('sumG4').innerText = kpiFormatted;
 
-            // Calculate Final Weight
             const finalScore = 
-                (v('g1') * 0.10) + 
-                (v('g2') * 0.10) + 
-                (v('g3') * 0.05) + 
-                (g4Score * 0.45) + 
-                (v('g5') * 0.10) + 
-                (v('g6') * 0.05) + 
-                (v('g7') * 0.10) + 
-                (v('g8') * 0.05);
+                (v('g1') * 0.10) + (v('g2') * 0.10) + (v('g3') * 0.05) + 
+                (g4Score * 0.45) + (v('g5') * 0.10) + (v('g6') * 0.05) + 
+                (v('g7') * 0.10) + (v('g8') * 0.05);
 
             document.getElementById('finalScoreDisplay').innerText = finalScore.toFixed(2);
 
-            // Set text helper
             let text = "Not Rated";
             if(finalScore >= 4.5) text = "Outstanding (5)";
             else if(finalScore >= 3.5) text = "Over Achieves (4)";
@@ -479,7 +456,102 @@
             document.getElementById('gradeText').innerText = text;
         }
 
-        // Database Logic (Local Storage)
+        // Privacy Mode Logic
+        let isPrivacyOn = false;
+        function togglePrivacy() {
+            isPrivacyOn = !isPrivacyOn;
+            const dbPanel = document.getElementById('dbPanel');
+            const btn = document.getElementById('privacyBtn');
+            
+            if(isPrivacyOn) {
+                dbPanel.style.display = 'none';
+                btn.innerText = 'Privacy: ON (Safe)';
+                btn.classList.add('btn-privacy-active');
+            } else {
+                dbPanel.style.display = 'block';
+                btn.innerText = 'Privacy: OFF';
+                btn.classList.remove('btn-privacy-active');
+            }
+        }
+
+        // PDF Scorecard Generator
+        function generateScorecard() {
+            const name = document.getElementById('empName').value || 'Employee';
+            const month = document.getElementById('evalMonth').value || 'Month';
+            const score = document.getElementById('finalScoreDisplay').innerText;
+            const grade = document.getElementById('gradeText').innerText;
+            const kpi = document.getElementById('kpiSubScore').innerText;
+
+            if (score === "0.00") {
+                alert("Please enter scores before generating a scorecard.");
+                return;
+            }
+
+            const getVal = id => {
+                const el = document.getElementById(id);
+                return el.options[el.selectedIndex].text;
+            };
+
+            const printWin = window.open('', '_blank', 'width=800,height=800');
+            printWin.document.write(`
+                <html>
+                <head>
+                    <title>${name} - ${month} Scorecard</title>
+                    <style>
+                        body { font-family: 'Segoe UI', Tahoma, sans-serif; padding: 40px; color: #333; }
+                        .header { text-align: center; border-bottom: 2px solid #c00000; padding-bottom: 20px; margin-bottom: 30px; }
+                        .header h1 { color: #c00000; margin: 0; font-size: 24px; }
+                        .header h2 { color: #555; margin: 5px 0 0 0; font-size: 18px; }
+                        .score-box { background: #f4f4f4; padding: 20px; text-align: center; border-radius: 8px; margin-bottom: 30px; border: 1px solid #ddd; }
+                        .score-box h2 { font-size: 48px; margin: 10px 0; color: #2c3e50; }
+                        .grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+                        .item { padding: 12px; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+                        .label { font-weight: bold; color: #555; }
+                        .val { font-weight: bold; color: #2c3e50; }
+                        .footer { margin-top: 50px; text-align: center; color: #777; font-size: 12px; border-top: 1px solid #eee; padding-top: 20px; }
+                        @media print { body { -webkit-print-color-adjust: exact; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>CBSC IT Operations - 2026 Performance Review</h1>
+                        <h2>${name} | ${month}</h2>
+                    </div>
+                    
+                    <div class="score-box">
+                        <p style="margin: 0; font-weight: bold; color: #777; text-transform: uppercase;">Final Weighted Rating</p>
+                        <h2>${score}</h2>
+                        <h3 style="margin: 0; color: #c00000;">${grade}</h3>
+                    </div>
+
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">Goal Breakdown</h3>
+                    <div class="grid">
+                        <div class="item"><span class="label">1. Customer Success (10%)</span> <span class="val">${getVal('g1')}</span></div>
+                        <div class="item"><span class="label">2. Employee Engagement (10%)</span> <span class="val">${getVal('g2')}</span></div>
+                        <div class="item"><span class="label">3. CSR / KSEM Support (5%)</span> <span class="val">${getVal('g3')}</span></div>
+                        <div class="item"><span class="label">4. KPI Delivery Accountability (45%)</span> <span class="val">Sub-Score: ${kpi} / 5.00</span></div>
+                        <div class="item"><span class="label">5. Transformation & Change (10%)</span> <span class="val">${getVal('g5')}</span></div>
+                        <div class="item"><span class="label">6. Service Improvement (5%)</span> <span class="val">${getVal('g6')}</span></div>
+                        <div class="item"><span class="label">7. Knowledge Enablement (10%)</span> <span class="val">${getVal('g7')}</span></div>
+                        <div class="item"><span class="label">8. Security & Compliance (5%)</span> <span class="val">${getVal('g8')}</span></div>
+                    </div>
+
+                    <div class="footer">
+                        Generated securely via CBSC internal performance tracker.
+                    </div>
+
+                    <script>
+                        window.onload = function() {
+                            setTimeout(function() { window.print(); }, 500);
+                        }
+                    </script>
+                </body>
+                </html>
+            `);
+            printWin.document.close();
+        }
+
+        // Database Logic
         function saveRecord() {
             const name = document.getElementById('empName').value;
             const month = document.getElementById('evalMonth').value;
@@ -518,7 +590,6 @@
             }
 
             container.innerHTML = "";
-            // Sort newest first
             db.sort((a,b) => b.id - a.id).forEach(rec => {
                 container.innerHTML += `
                     <div class="record-card">
@@ -541,7 +612,6 @@
             }
         }
 
-        // Load records on page start
         window.onload = loadRecords;
     </script>
 </body>
