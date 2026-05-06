@@ -474,7 +474,7 @@
             }
         }
 
-        // PDF Scorecard Generator
+        // PDF Scorecard Generator - FIXED
         function generateScorecard() {
             const name = document.getElementById('empName').value || 'Employee';
             const month = document.getElementById('evalMonth').value || 'Month';
@@ -539,16 +539,14 @@
                     <div class="footer">
                         Generated securely via CBSC internal performance tracker.
                     </div>
-
-                    <script>
-                        window.onload = function() {
-                            setTimeout(function() { window.print(); }, 500);
-                        }
-                    </script>
                 </body>
                 </html>
             `);
+            
+            // Execute print safely from the parent window
             printWin.document.close();
+            printWin.focus();
+            setTimeout(function() { printWin.print(); }, 500);
         }
 
         // Database Logic
