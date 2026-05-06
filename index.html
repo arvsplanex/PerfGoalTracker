@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CBSC 2026 Performance Dashboard</title>
+    <title>ITOPS Performance Evaluation Tracker</title>
     <style>
         :root {
             --primary: #c00000;
@@ -18,390 +18,472 @@
         .header h1 { color: var(--primary); margin-bottom: 5px; }
         .container { max-width: 1300px; margin: 0 auto; display: flex; flex-direction: column; gap: 30px; }
 
-        /* --- UPPER SECTION (INPUT) --- */
-        .upper-section { display: flex; gap: 20px; }
-        .form-section { flex: 2.5; background: var(--card-bg); padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .live-score-section { flex: 1; background: #2c3e50; color: white; padding: 30px; border-radius: 8px; text-align: center; position: sticky; top: 20px; height: fit-content; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        
-        .live-score-section h2 { margin: 0; font-size: 64px; }
-        .live-score-section p { margin: 5px 0 20px 0; font-size: 14px; opacity: 0.8; }
-        .live-kpi { background: rgba(0,0,0,0.2); padding: 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; border: 1px solid rgba(255,255,255,0.1); }
+        .form-section { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
 
-        .btn { background-color: var(--primary); color: white; border: none; padding: 15px 20px; width: 100%; border-radius: 4px; font-size: 18px; cursor: pointer; font-weight: bold; transition: 0.2s; }
+        .btn { background-color: var(--primary); color: white; border: none; padding: 15px 20px; width: 100%; border-radius: 4px; font-size: 18px; cursor: pointer; font-weight: bold; transition: 0.2s; margin-top: 20px; }
         .btn:hover { background-color: #a00000; transform: translateY(-2px); }
 
-        .form-group { display: flex; gap: 15px; margin-bottom: 20px; background: #fdfdfd; padding: 15px; border-radius: 6px; border: 1px solid var(--border-light); }
+        .form-group { display: flex; gap: 15px; margin-bottom: 25px; background: #fdfdfd; padding: 20px; border-radius: 6px; border: 1px solid var(--border-light); }
         .form-group input, .form-group select { padding: 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; flex: 1; font-weight: bold; color: var(--text-main); }
         
-        /* Updated Grid for Full Text Titles */
         .goal-grid { display: grid; grid-template-columns: 1fr; gap: 20px; } 
         .goal-card { border: 1px solid var(--border-light); border-radius: 6px; padding: 20px; background-color: #fafafa; display: flex; flex-direction: column; }
         .goal-header { display: flex; flex-direction: column; align-items: flex-start; width: 100%; gap: 10px; margin-bottom: 5px; }
-        .goal-header h3 { margin: 0; font-size: 16px; color: #2c3e50; line-height: 1.4; }
-        .goal-input { width: 100%; max-width: 500px; padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; font-size: 14px;}
+        .goal-header h3 { margin: 0; font-size: 16px; color: #2c3e50; line-height: 1.4; display: flex; justify-content: space-between; width: 100%; align-items: center; }
+        .goal-input { width: 100%; max-width: 600px; padding: 10px; border-radius: 4px; border: 1px solid #ccc; font-weight: bold; font-size: 14px;}
         
-        /* Details & Context Expansion */
         details { margin-top: 10px; background: #fff; padding: 15px; border-radius: 4px; border: 1px solid var(--border-light); font-size: 13.5px; line-height: 1.6; color: #333; }
         summary { font-weight: bold; cursor: pointer; color: #3498db; outline: none; margin-bottom: 10px; font-size: 14px; }
         details ul { margin-top: 5px; padding-left: 20px; margin-bottom: 10px; }
         
-        /* KPI Specific Styling */
         .kpi-card { border-left: 4px solid var(--primary); }
         .kpi-inputs { display: flex; flex-direction: column; gap: 15px; margin-top: 15px; width: 100%; background: #fff; padding: 20px; border-radius: 4px; border: 1px solid var(--border-light); box-sizing: border-box; }
+        .kpi-tracker { background: #e8f4f8; padding: 5px 10px; border-radius: 4px; font-size: 14px; color: #2980b9; border: 1px solid #bde0f2; }
 
-        /* --- LOWER SECTION (HISTORY SUMMARY) --- */
-        .lower-section { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-height: 300px;}
+        .lower-section { background: var(--card-bg); padding: 30px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); min-height: 150px;}
         .history-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); padding-bottom: 15px; margin-bottom: 20px; }
         .history-header h2 { margin: 0; color: #2c3e50; }
-        .history-select { padding: 10px; font-size: 16px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 250px; }
+        .history-select { padding: 10px; font-size: 16px; font-weight: bold; border-radius: 4px; border: 1px solid #ccc; width: 280px; background-color: #fdfdfd; cursor: pointer; }
 
-        .month-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+        .table-wrapper { width: 100%; overflow-x: auto; background: #fff; border-radius: 6px; border: 1px solid var(--border-light); }
         
-        .month-card { background: #fdfdfd; border: 1px solid var(--border-light); border-radius: 6px; padding: 20px; position: relative; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .month-title { font-size: 20px; font-weight: bold; color: var(--primary); margin-bottom: 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .month-score { font-size: 28px; font-weight: bold; color: #2c3e50; margin-bottom: 5px; }
-        .month-grade { font-size: 12px; font-weight: bold; color: #7f8c8d; text-transform: uppercase; margin-bottom: 15px; }
+        .history-table { width: 100%; border-collapse: collapse; text-align: center; font-size: 14px; }
+        .history-table th { background: #2c3e50; color: white; padding: 15px; font-size: 14px; border-right: 1px solid #34495e; white-space: nowrap; }
+        .history-table td { padding: 12px 15px; border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); }
         
-        .mini-breakdown { font-size: 13px; color: #444; display: grid; grid-template-columns: 1fr; gap: 8px; background: #f4f7f6; padding: 15px; border-radius: 4px; line-height: 1.4; }
-        .mini-breakdown span { font-weight: bold; color: #2c3e50; float: right; }
+        .history-table th:first-child { background: var(--primary); text-align: left; position: sticky; left: 0; z-index: 3; width: 350px; min-width: 350px; border-right: 1px solid #a00000; }
+        .history-table td:first-child { text-align: left; font-weight: bold; color: #2c3e50; background: #fdfdfd; position: sticky; left: 0; z-index: 2; border-right: 1px solid var(--border-light); }
+        
+        .history-table th:nth-child(2) { background: #34495e; position: sticky; left: 350px; z-index: 3; width: 80px; min-width: 80px; }
+        .history-table td:nth-child(2) { font-weight: bold; color: #7f8c8d; background: #f9f9f9; position: sticky; left: 350px; z-index: 2; border-right: 2px solid var(--border-light); }
 
-        .card-actions { display: flex; gap: 10px; margin-top: 15px; }
-        .btn-edit { flex: 1; background: #3498db; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .history-table tbody tr:nth-child(even) td:not(:first-child):not(:nth-child(2)) { background-color: #fafafa; }
+        .history-table tbody tr:hover td:not(:first-child):not(:nth-child(2)) { background-color: #f1f2f6; }
+
+        .card-actions { display: flex; gap: 5px; justify-content: center; }
+        .btn-edit { background: #3498db; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 11px; }
         .btn-edit:hover { background: #2980b9; }
-        .btn-delete { background: #e74c3c; color: white; border: none; padding: 10px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 13px; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 10px; border-radius: 3px; cursor: pointer; font-weight: bold; font-size: 11px; }
         .btn-delete:hover { background: #c0392b; }
-
-        .empty-state { text-align: center; color: #95a5a6; padding: 40px; font-style: italic; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>CBSC Performance Evaluation Tracker</h1>
-        <p style="margin:0; font-weight:bold; color:#7f8c8d;">IT Operations - 2026</p>
+        <h1>ITOPS Performance Evaluation Tracker</h1>
     </div>
 
     <div class="container">
         
-        <!-- ================= UPPER SECTION: INPUT ================= -->
-        <div class="upper-section">
-            <div class="form-section">
-                <div class="form-group">
-                    <div>
-                        <label style="font-size: 12px; color: #7f8c8d; font-weight: bold; display: block; margin-bottom: 5px;">EMPLOYEE NAME</label>
-                        <input type="text" id="empName" placeholder="e.g. Jean" autocomplete="off">
-                    </div>
-                    <div>
-                        <label style="font-size: 12px; color: #7f8c8d; font-weight: bold; display: block; margin-bottom: 5px;">EVALUATION MONTH</label>
-                        <select id="evalMonth">
-                            <option value="" disabled selected>Select Month...</option>
-                            <option value="January">January</option><option value="February">February</option>
-                            <option value="March">March</option><option value="April">April</option>
-                            <option value="May">May</option><option value="June">June</option>
-                            <option value="July">July</option><option value="August">August</option>
-                            <option value="September">September</option><option value="October">October</option>
-                            <option value="November">November</option><option value="December">December</option>
+        <!-- UPPER SECTION: FORM -->
+        <div class="form-section">
+            <div class="form-group">
+                <div>
+                    <label style="font-size: 12px; color: #7f8c8d; font-weight: bold; display: block; margin-bottom: 5px;">EMPLOYEE NAME</label>
+                    <input type="text" id="empName" placeholder="e.g. Arvs" autocomplete="off">
+                </div>
+                <div>
+                    <label style="font-size: 12px; color: #7f8c8d; font-weight: bold; display: block; margin-bottom: 5px;">EVALUATION MONTH</label>
+                    <select id="evalMonth">
+                        <option value="" disabled selected>Select Month...</option>
+                        <option value="January">January</option><option value="February">February</option>
+                        <option value="March">March</option><option value="April">April</option>
+                        <option value="May">May</option><option value="June">June</option>
+                        <option value="July">July</option><option value="August">August</option>
+                        <option value="September">September</option><option value="October">October</option>
+                        <option value="November">November</option><option value="December">December</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- MATH DASHBOARD -->
+            <div style="display: flex; gap: 20px; background: #2c3e50; padding: 20px; border-radius: 6px; margin-bottom: 25px; color: white; align-items: center;">
+                <div style="flex: 1;">
+                    <span style="font-size: 12px; opacity: 0.8; text-transform: uppercase;">Active Weighted Score</span><br>
+                    <span id="finalScoreDisplay" style="font-size: 42px; font-weight: bold;">0.00</span>
+                </div>
+                <div style="flex: 2;">
+                    <span id="gradeText" style="font-size: 20px; font-weight: bold; color: #ffd700;">-</span><br>
+                    <span style="font-size: 13px; opacity: 0.8;">Score is dynamically prorated based only on active/graded metrics.</span>
+                </div>
+            </div>
+
+            <!-- GOAL GRID -->
+            <div class="goal-grid">
+                <!-- G1 -->
+                <div class="goal-card">
+                    <div class="goal-header">
+                        <h3><span>1. Customer Success</span> <span style="color:#7f8c8d; font-size: 14px;">(10%)</span></h3>
+                        <select class="goal-input score-calc" id="g1">
+                            <option value="-">TBA / Not Graded</option>
+                            <option value="5">5 - Outstanding (>= 80 NPS)</option>
+                            <option value="4">4 - Over Achieves Expectations (>= 75 NPS)</option>
+                            <option value="3">3 - Always Achieves Expectations (>= 70 NPS)</option>
+                            <option value="2">2 - Mostly Achieves Expectations (>= 65 NPS)</option>
+                            <option value="1">1 - Not Achieving Expectations (<= 64 NPS)</option>
                         </select>
                     </div>
+                    <details>
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> We have a laser focus on the success of our customers, in every interaction we have, whether direct or indirect, whether customer facing or in support of others, we show we truly care.<br><br>
+                        <strong>Measures of success:</strong><br>
+                        A customer NPS score greater than 70.
+                        <ul>
+                            <li>Professional and respectful interactions with customers and stakeholders.</li>
+                            <li>Issues handled efficiently and escalated appropriately when needed.</li>
+                            <li>Positive customer feedback or absence of justified complaints.</li>
+                            <li>Actions aligned with CBS values of care and service excellence.</li>
+                        </ul>
+                    </details>
                 </div>
 
-                <div class="goal-grid">
-                    <!-- G1 -->
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <h3>1. Customer Success (10%)</h3>
-                            <select class="goal-input score-calc" id="g1">
-                                <option value="0">Select Score...</option>
-                                <option value="5">5 - Outstanding (>= 80 NPS)</option>
-                                <option value="4">4 - Over Achieves Expectations (>= 75 NPS)</option>
-                                <option value="3">3 - Always Achieves Expectations (>= 70 NPS)</option>
-                                <option value="2">2 - Mostly Achieves Expectations (>= 65 NPS)</option>
-                                <option value="1">1 - Not Achieving Expectations (<= 64 NPS)</option>
-                            </select>
-                        </div>
-                        <details>
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> We have a laser focus on the success of our customers, in every interaction we have, whether direct or indirect, whether customer facing or in support of others, we show we truly care.<br><br>
-                            <strong>Measures of success:</strong><br>
-                            A customer NPS score greater than 70.
-                            <ul>
-                                <li>Professional and respectful interactions with customers and stakeholders.</li>
-                                <li>Issues handled efficiently and escalated appropriately when needed.</li>
-                                <li>Positive customer feedback or absence of justified complaints.</li>
-                                <li>Actions aligned with CBS values of care and service excellence.</li>
-                            </ul>
-                        </details>
+                <!-- G2 -->
+                <div class="goal-card">
+                    <div class="goal-header">
+                        <h3><span>2. Purpose Driven Culture: Enhanced CBS Employee Engagement</span> <span style="color:#7f8c8d; font-size: 14px;">(10%)</span></h3>
+                        <select class="goal-input score-calc" id="g2">
+                            <option value="-">TBA / Accumulating...</option>
+                            <option disabled>── MONTHLY LOGGING ──</option>
+                            <option value="0.5 pts">Logged: 0.5 pts</option>
+                            <option value="1.0 pt">Logged: 1.0 pt</option>
+                            <option value="1.5 pts">Logged: 1.5 pts</option>
+                            <option value="2.0 pts">Logged: 2.0 pts</option>
+                            <option disabled>── FINAL YEAR-END GRADE ──</option>
+                            <option value="5">5 - Outstanding (4 points)</option>
+                            <option value="4">4 - Over Achieves Expectations (3 to 3.5 points)</option>
+                            <option value="3">3 - Always Achieves Expectations (2 to 2.5 points)</option>
+                            <option value="2">2 - Mostly Achieves Expectations (1 to 1.5 points)</option>
+                            <option value="1">1 - Not Achieving Expectations (0 points)</option>
+                        </select>
                     </div>
-
-                    <!-- G2 -->
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <h3>2. Purpose Driven Culture: Enhanced CBS Employee Engagement (as Members) (10%)</h3>
-                            <select class="goal-input score-calc" id="g2">
-                                <option value="0">Select Score...</option>
-                                <option value="5">5 - Outstanding (4 points)</option>
-                                <option value="4">4 - Over Achieves Expectations (3 to 3.5 points)</option>
-                                <option value="3">3 - Always Achieves Expectations (2 to 2.5 points)</option>
-                                <option value="2">2 - Mostly Achieves Expectations (1 to 1.5 points)</option>
-                                <option value="1">1 - Not Achieving Expectations (0 points)</option>
-                            </select>
-                        </div>
-                        <details>
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> Participate in CBSC's Employee Engagement (EE) programs/activities (e.g. CBSC Townhalls, CBSC Team Building, CBSC Family Day). Volunteer to internal committees or task forces that organize EE initiatives.<br><br>
-                            <strong>Measures of success:</strong>
-                            <ul>
-                                <li>Participation in employee engagement initiatives and surveys.</li>
-                                <li>Demonstrates respect, collaboration, and support for colleagues.</li>
-                                <li>Open to feedback and contributes ideas for improving team morale.</li>
-                                <li>Aligns behaviours with CBS culture of care.</li>
-                            </ul>
-                            <strong>Point System:</strong><br>
-                            Major activities = 1 point<br>
-                            Active participation in internal committees handling EE = 1 point<br>
-                            Other EE activity = 0.5 points
-                        </details>
-                    </div>
-
-                    <!-- G3 -->
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <h3>3. We Truly Care: Support CSR Programs (i.e. KSEM) (5%)</h3>
-                            <select class="goal-input score-calc" id="g3">
-                                <option value="0">Select Score...</option>
-                                <option value="5">5 - Outstanding (4 points)</option>
-                                <option value="4">4 - Over Achieves Expectations (3 to 3.5 points)</option>
-                                <option value="3">3 - Always Achieves Expectations (2 to 2.5 points)</option>
-                                <option value="2">2 - Mostly Achieves Expectations (1 to 1.5 points)</option>
-                                <option value="1">1 - Not Achieving Expectations (0 points)</option>
-                            </select>
-                        </div>
-                        <details>
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> Participate in CBSC's Corporate Social Responsibility (CSR) programs/activities (e.g. KSEM Educational Sponsorship Program, KSEM / Duyan ni Maria Volunteering and Donation, Blood Donation Drive). Join CSR events like clean-up drives, charity runs, or donation campaigns. Volunteer for internal committees or task forces that organize CSR initiatives.<br><br>
-                            <strong>Point System:</strong><br>
-                            Volunteering (KSEM) = 1 point<br>
-                            Active participation in internal committees handling CSR = 1 point<br>
-                            Other CSR activity (donation) = 0.5 points
-                        </details>
-                    </div>
-                    
-                    <!-- G4 KPI -->
-                    <div class="goal-card kpi-card">
-                        <div class="goal-header">
-                            <h3>4. KPI Delivery Accountability (45% Total Weight)</h3>
-                        </div>
-                        <details style="width: 100%; box-sizing: border-box;">
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> Contribute to the overall success of the team by effectively managing assigned work, prioritising tasks, and collaborating with leaders and peers to support the achievement of agreed operational KPIs.<br><br>
-                            <strong>Measures of success:</strong>
-                            <ul>
-                                <li>Work consistently supports team KPI achievement (e.g. SLA, quality, delivery). Achieves ≥ 90% of agreed KPIs (e.g. SLA, resolution targets, quality, availability, project delivery).</li>
-                                <li>Tasks and responsibilities completed within agreed timelines.</li>
-                                <li>No repeated issues or behaviours that negatively impact team performance.</li>
-                                <li>Active cooperation with leaders and peers to address workload, risks, or performance gaps.</li>
-                            </ul>
-                        </details>
-                        
-                        <div class="kpi-inputs">
-                            <div>
-                                <label style="font-size: 12px; font-weight: bold; color: #7f8c8d; display:block; margin-bottom:8px;">Operational Accuracy & Risk Management (40%)</label>
-                                <select class="goal-input score-calc" id="g4a" style="width: 100%; max-width: 100%;">
-                                    <option value="0">Select Score...</option>
-                                    <option value="5">5 - Outstanding (Zero Justified Escalation)</option>
-                                    <option value="3">3 - Over Achieves Expectations (1-3 Minor process Miss)</option>
-                                    <option value="1">1 - Not Achieving Expectations (Justified Customer Complain/Outage/P1)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: bold; color: #7f8c8d; display:block; margin-bottom:8px;">Ticket Management (30%)</label>
-                                <select class="goal-input score-calc" id="g4b" style="width: 100%; max-width: 100%;">
-                                    <option value="0">Select Score...</option>
-                                    <option value="5">5 - Outstanding (97-100%)</option>
-                                    <option value="4">4 - Over Achieves (94-96%)</option>
-                                    <option value="3">3 - Always Achieves (90-93%)</option>
-                                    <option value="2">2 - Mostly Achieves (85-89%)</option>
-                                    <option value="1">1 - Not Achieving (Below 85%)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label style="font-size: 12px; font-weight: bold; color: #7f8c8d; display:block; margin-bottom:8px;">Ticket Quality (30%)</label>
-                                <select class="goal-input score-calc" id="g4c" style="width: 100%; max-width: 100%;">
-                                    <option value="0">Select Score...</option>
-                                    <option value="5">5 - Outstanding (97-100%)</option>
-                                    <option value="4">4 - Over Achieves (94-96%)</option>
-                                    <option value="3">3 - Always Achieves (90-93%)</option>
-                                    <option value="2">2 - Mostly Achieves (85-89%)</option>
-                                    <option value="1">1 - Not Achieving (Below 85%)</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- G5 -->
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <h3>5. Transformation (Change Adoption & Ways of Working) (10%)</h3>
-                            <select class="goal-input score-calc" id="g5">
-                                <option value="0">Select Score...</option>
-                                <option value="5">5 - Outstanding</option>
-                                <option value="4">4 - Over Achieves Expectations</option>
-                                <option value="3">3 - Always Achieves Expectations</option>
-                                <option value="2">2 - Mostly Achieves Expectations</option>
-                                <option value="1">1 - Not Achieving Expectations</option>
-                            </select>
-                        </div>
-                        <details>
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> Actively support and adopt changes to tools, processes, and operating models introduced as part of CBS’s transformation journey.<br><br>
-                            <strong>Measures of success:</strong>
-                            <ul>
-                                <li>Timely adoption of new platforms, tools, or processes relevant to role.</li>
-                                <li>Participation in required training, pilots, or change activities.</li>
-                                <li>Constructive feedback provided to improve new ways of working.</li>
-                                <li>Demonstrates flexibility and positive attitude toward change.</li>
-                            </ul>
-                        </details>
-                    </div>
-
-                    <!-- G6 -->
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <h3>6. Service Improvement, Operational Excellence & Risk Reduction (5%)</h3>
-                            <select class="goal-input score-calc" id="g6">
-                                <option value="0">Select Score...</option>
-                                <option value="5">5 - Outstanding</option>
-                                <option value="4">4 - Over Achieves Expectations</option>
-                                <option value="3">3 - Always Achieves Expectations</option>
-                                <option value="2">2 - Mostly Achieves Expectations</option>
-                                <option value="1">1 - Not Achieving Expectations</option>
-                            </select>
-                        </div>
-                        <details>
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> Identify, propose, and successfully implement service improvement initiatives that enhance service quality, efficiency, stability, or customer experience.<br><br>
-                            <strong>Measures of success:</strong>
-                            <ul>
-                                <li>Work is delivered in line with agreed processes and quality standards.</li>
-                                <li>Issues, inefficiencies, or risks are raised early, not ignored.</li>
-                                <li>Recurring problems are flagged with suggestions for improvement.</li>
-                                <li>Errors or near‑misses are treated as learning opportunities, not hidden.</li>
-                                <li>Daily actions support smoother, more reliable service delivery.</li>
-                            </ul>
-                        </details>
-                    </div>
-
-                    <!-- G7 -->
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <h3>7. Capability Development & Knowledge Enablement (10%)</h3>
-                            <select class="goal-input score-calc" id="g7">
-                                <option value="0">Select Score...</option>
-                                <option value="5">5 - Outstanding</option>
-                                <option value="4">4 - Over Achieves Expectations</option>
-                                <option value="3">3 - Always Achieves Expectations</option>
-                                <option value="2">2 - Mostly Achieves Expectations</option>
-                                <option value="1">1 - Not Achieving Expectations</option>
-                            </select>
-                        </div>
-                        <details>
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> We are responsible for continuously improving our skills, staying current in our roles, and ensuring that the knowledge we gain is shared and documented so others can learn from it and services can be delivered consistently.<br><br>
-                            <strong>Measures of success:</strong>
-                            <ul>
-                                <li>Required training and role‑based learning are completed on time.</li>
-                                <li>New skills are applied in day‑to‑day work.</li>
-                                <li>Workarounds, fixes, and learnings are documented or shared with the team.</li>
-                                <li>Contributions are made to KBs, runbooks, or team documentation.</li>
-                                <li>Peers can rely on shared knowledge to resolve issues faster.</li>
-                            </ul>
-                        </details>
-                    </div>
-
-                    <!-- G8 -->
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <h3>8. Information Security, Data Privacy & Policy Compliance (5%)</h3>
-                            <select class="goal-input score-calc" id="g8">
-                                <option value="0">Select Score...</option>
-                                <option value="5">5 - Outstanding</option>
-                                <option value="4">4 - Over Achieves Expectations</option>
-                                <option value="3">3 - Always Achieves Expectations</option>
-                                <option value="2">2 - Mostly Achieves Expectations</option>
-                                <option value="1">1 - Not Achieving Expectations</option>
-                            </select>
-                        </div>
-                        <details>
-                            <summary>View Goal Details & Context</summary>
-                            <strong>Description:</strong> Ensure compliance with Information Security, Data Privacy, and internal policies through strong awareness, responsible behaviour, and adherence to required standards.<br><br>
-                            <strong>Measures of success:</strong>
-                            <ul>
-                                <li>< 10% compromise rate in end‑of‑year phishing or attack simulations.</li>
-                                <li>Zero confirmed breaches or violations of Information Security, Data Privacy, or internal policy requirements.</li>
-                                <li>100% completion of mandatory compliance training, including InfoSec, Data Privacy, and other required policy training.</li>
-                                <li>Consistent compliance with internal policies and procedures, including acceptable use, data handling, access control, and confidentiality requirements.</li>
-                                <li>Active participation in compliance and awareness initiatives when required.</li>
-                            </ul>
-                        </details>
-                    </div>
+                    <details>
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> Participate in CBSC's Employee Engagement (EE) programs/activities (e.g. CBSC Townhalls, CBSC Team Building, CBSC Family Day). Volunteer to internal committees or task forces that organize EE initiatives.<br><br>
+                        <strong>Measures of success:</strong>
+                        <ul>
+                            <li>Participation in employee engagement initiatives and surveys.</li>
+                            <li>Demonstrates respect, collaboration, and support for colleagues.</li>
+                            <li>Open to feedback and contributes ideas for improving team morale.</li>
+                            <li>Aligns behaviours with CBS culture of care.</li>
+                        </ul>
+                        <strong>Point System:</strong><br>
+                        Major activities = 1 point<br>
+                        Active participation in internal committees handling EE = 1 point<br>
+                        Other EE activity = 0.5 points
+                    </details>
                 </div>
-            </div>
 
-            <div class="live-score-section">
-                <p>FINAL CALCULATED SCORE</p>
-                <h2 id="finalScoreDisplay">0.00</h2>
-                <p id="gradeText" style="font-weight: bold; color: #ffd700; margin-bottom: 20px;">-</p>
+                <!-- G3 -->
+                <div class="goal-card">
+                    <div class="goal-header">
+                        <h3><span>3. We Truly Care: Support CSR Programs (i.e. KSEM)</span> <span style="color:#7f8c8d; font-size: 14px;">(5%)</span></h3>
+                        <select class="goal-input score-calc" id="g3">
+                            <option value="-">TBA / Accumulating...</option>
+                            <option disabled>── MONTHLY LOGGING ──</option>
+                            <option value="0.5 pts">Logged: 0.5 pts</option>
+                            <option value="1.0 pt">Logged: 1.0 pt</option>
+                            <option value="1.5 pts">Logged: 1.5 pts</option>
+                            <option value="2.0 pts">Logged: 2.0 pts</option>
+                            <option disabled>── FINAL YEAR-END GRADE ──</option>
+                            <option value="5">5 - Outstanding (4 points)</option>
+                            <option value="4">4 - Over Achieves Expectations (3 to 3.5 points)</option>
+                            <option value="3">3 - Always Achieves Expectations (2 to 2.5 points)</option>
+                            <option value="2">2 - Mostly Achieves Expectations (1 to 1.5 points)</option>
+                            <option value="1">1 - Not Achieving Expectations (0 points)</option>
+                        </select>
+                    </div>
+                    <details>
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> Participate in CBSC's Corporate Social Responsibility (CSR) programs/activities. Join CSR events like clean-up drives, charity runs, or donation campaigns. Volunteer for internal committees or task forces that organize CSR initiatives.<br><br>
+                        <strong>Point System:</strong><br>
+                        Volunteering (KSEM) = 1 point<br>
+                        Active participation in internal committees handling CSR = 1 point<br>
+                        Other CSR activity (donation) = 0.5 points
+                    </details>
+                </div>
                 
-                <div class="live-kpi">
-                    <span style="font-size: 13px; font-weight: normal;">4. KPI Delivery Accountability Sub-Score:</span><br>
-                    <span id="kpiSubScore" style="font-size: 28px; color: #3498db;">0.00</span>
+                <!-- G4 KPI -->
+                <div class="goal-card kpi-card">
+                    <div class="goal-header">
+                        <h3>
+                            <span>4. KPI Delivery Accountability</span> 
+                            <div style="display: flex; align-items: center; gap: 10px;">
+                                <span class="kpi-tracker">Current KPI Sub-Score: <span id="kpiSubScore" style="font-weight: 900;">0.00</span></span>
+                                <span style="color:#7f8c8d; font-size: 14px;">(50%)</span>
+                            </div>
+                        </h3>
+                    </div>
+                    <details style="width: 100%; box-sizing: border-box;">
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> Contribute to the overall success of the team by effectively managing assigned work, prioritising tasks, and collaborating with leaders and peers to support the achievement of agreed operational KPIs.<br><br>
+                        <strong>Measures of success:</strong>
+                        <ul>
+                            <li>Work consistently supports team KPI achievement (e.g. SLA, quality, delivery). Achieves ≥ 90% of agreed KPIs (e.g. SLA, resolution targets, quality, availability, project delivery).</li>
+                            <li>Tasks and responsibilities completed within agreed timelines.</li>
+                            <li>No repeated issues or behaviours that negatively impact team performance.</li>
+                            <li>Active cooperation with leaders and peers to address workload, risks, or performance gaps.</li>
+                        </ul>
+                    </details>
+                    
+                    <div class="kpi-inputs">
+                        <div>
+                            <label style="font-size: 12px; font-weight: bold; color: #7f8c8d; display:block; margin-bottom:8px;">Operational Accuracy & Risk Management (40%)</label>
+                            <select class="goal-input score-calc" id="g4a" style="width: 100%;">
+                                <option value="-">Select Score...</option>
+                                <option value="5">5 - Outstanding (Zero Justified Escalation)</option>
+                                <option value="3">3 - Over Achieves (1-3 Minor process Miss)</option>
+                                <option value="1">1 - Not Achieving (Justified Customer Complain/Outage/P1)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: bold; color: #7f8c8d; display:block; margin-bottom:8px;">Ticket Management (30%)</label>
+                            <select class="goal-input score-calc" id="g4b" style="width: 100%;">
+                                <option value="-">Select Score...</option>
+                                <option value="5">5 - Outstanding (97-100%)</option>
+                                <option value="4">4 - Over Achieves (94-96%)</option>
+                                <option value="3">3 - Always Achieves (90-93%)</option>
+                                <option value="2">2 - Mostly Achieves (85-89%)</option>
+                                <option value="1">1 - Not Achieving (<85%)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 12px; font-weight: bold; color: #7f8c8d; display:block; margin-bottom:8px;">Ticket Quality (30%)</label>
+                            <select class="goal-input score-calc" id="g4c" style="width: 100%;">
+                                <option value="-">Select Score...</option>
+                                <option value="5">5 - Outstanding (97-100%)</option>
+                                <option value="4">4 - Over Achieves (94-96%)</option>
+                                <option value="3">3 - Always Achieves (90-93%)</option>
+                                <option value="2">2 - Mostly Achieves (85-89%)</option>
+                                <option value="1">1 - Not Achieving (<85%)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
 
-                <button class="btn" onclick="saveRecord()">Save Evaluation</button>
+                <!-- G5 -->
+                <div class="goal-card">
+                    <div class="goal-header">
+                        <h3><span>5. Transformation (Change Adoption & Ways of Working)</span> <span style="color:#7f8c8d; font-size: 14px;">(10%)</span></h3>
+                        <select class="goal-input score-calc" id="g5">
+                            <option value="-">TBA / Not Graded</option>
+                            <option value="5">5 - Outstanding (Adopts immediately, volunteers/trains teammates)</option>
+                            <option value="4">4 - Over Achieves (Completes required early, suggests improvements)</option>
+                            <option value="3">3 - Always Achieves (Adopts on time, flexible attitude)</option>
+                            <option value="2">2 - Mostly Achieves (Needs reminders, mostly complains)</option>
+                            <option value="1">1 - Not Achieving (Fails to adopt, significant resistance)</option>
+                        </select>
+                    </div>
+                    <details>
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> Actively support and adopt changes to tools, processes, and operating models introduced as part of CBS’s transformation journey.<br><br>
+                        <strong>Measures of success:</strong>
+                        <ul>
+                            <li>Timely adoption of new platforms, tools, or processes relevant to role.</li>
+                            <li>Participation in required training, pilots, or change activities.</li>
+                            <li>Constructive feedback provided to improve new ways of working.</li>
+                            <li>Demonstrates flexibility and positive attitude toward change.</li>
+                        </ul>
+                        <strong>Scoring Rubric:</strong><br>
+                        <strong>5 (Outstanding):</strong> Adopts new platforms/processes immediately. Volunteers for pilots or helps train teammates on the new ways of working.<br>
+                        <strong>4 (Over Achieves):</strong> Completes all required training/pilots ahead of schedule. Demonstrates a very positive attitude and suggests specific improvements.<br>
+                        <strong>3 (Always Achieves):</strong> Adopts new tools within the given timeline. Participates in all required activities and maintains a flexible attitude during the transition period.<br>
+                        <strong>2 (Mostly Achieves):</strong> Needs reminders or follow-ups to switch to new tools/processes. Feedback is mostly complaints rather than constructive suggestions.<br>
+                        <strong>1 (Not Achieving):</strong> Fails to adopt new platforms or attend required training. Shows significant resistance that hinders the team’s transformation progress.
+                    </details>
+                </div>
+
+                <!-- G6 -->
+                <div class="goal-card">
+                    <div class="goal-header">
+                        <h3><span>6. Service Improvement, Operational Excellence & Risk Reduction</span> <span style="color:#7f8c8d; font-size: 14px;">(5%)</span></h3>
+                        <select class="goal-input score-calc" id="g6">
+                            <option value="-">TBA / Not Graded</option>
+                            <option value="5">5 - Outstanding (Implemented new process/automation)</option>
+                            <option value="4">4 - Over Achieves (Consistently flags & proposes solutions)</option>
+                            <option value="3">3 - Always Achieves (Raises risks early, delivers standard work)</option>
+                            <option value="2">2 - Mostly Achieves (Reports when asked, ignores inefficiencies)</option>
+                            <option value="1">1 - Not Achieving (Ignores issues, hides errors/near-misses)</option>
+                        </select>
+                    </div>
+                    <details>
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> Identify, propose, and successfully implement service improvement initiatives that enhance service quality, efficiency, stability, or customer experience.<br><br>
+                        <strong>Measures of success:</strong>
+                        <ul>
+                            <li>Work is delivered in line with agreed processes and quality standards.</li>
+                            <li>Issues, inefficiencies, or risks are raised early, not ignored.</li>
+                            <li>Recurring problems are flagged with suggestions for improvement.</li>
+                            <li>Errors or near‑misses are treated as learning opportunities, not hidden.</li>
+                            <li>Daily actions support smoother, more reliable service delivery.</li>
+                        </ul>
+                        <strong>Scoring Rubric:</strong><br>
+                        <strong>5 (Outstanding):</strong> Successfully implemented a new process or automation that significantly reduced recurring alerts or manual work for the whole team.<br>
+                        <strong>4 (Over Achieves):</strong> Consistently flags recurring issues and proposes a specific, documented solution or fix.<br>
+                        <strong>3 (Always Achieves):</strong> Raises risks or inefficiencies early. Delivers work according to standard processes and never hides errors.<br>
+                        <strong>2 (Mostly Achieves):</strong> Only reports problems when asked. Occasionally ignores small inefficiencies because "that's how we've always done it".<br>
+                        <strong>1 (Not Achieving):</strong> Ignores recurring issues or hides errors/near-misses. Daily actions do not contribute to service stability.
+                    </details>
+                </div>
+
+                <!-- G7 -->
+                <div class="goal-card">
+                    <div class="goal-header">
+                        <h3><span>7. Capability Development & Knowledge Enablement</span> <span style="color:#7f8c8d; font-size: 14px;">(5%)</span></h3>
+                        <select class="goal-input score-calc" id="g7">
+                            <option value="-">TBA (Non-Quarter Month)</option>
+                            <option disabled>── QUARTERLY GRADE ──</option>
+                            <option value="5">5 - Outstanding (5 quality KB + 1 exam/training)</option>
+                            <option value="4">4 - Over Achieves (4 quality KB + 1 exam/training)</option>
+                            <option value="3">3 - Always Achieves (3 quality KB + 1 exam/training)</option>
+                            <option value="2">2 - Mostly Achieves (2 quality KB + 1 exam/training)</option>
+                            <option value="1">1 - Not Achieving (0-1 quality KB + 1 exam/training)</option>
+                        </select>
+                    </div>
+                    <details>
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> We are responsible for continuously improving our skills, staying current in our roles, and ensuring that the knowledge we gain is shared and documented so others can learn from it and services can be delivered consistently.<br><br>
+                        <strong>Measures of success:</strong>
+                        <ul>
+                            <li>Required training and role‑based learning are completed on time.</li>
+                            <li>New skills are applied in day‑to‑day work.</li>
+                            <li>Workarounds, fixes, and learnings are documented or shared with the team.</li>
+                            <li>Contributions are made to KBs, runbooks, or team documentation.</li>
+                            <li>Peers can rely on shared knowledge to resolve issues faster.</li>
+                        </ul>
+                        <strong>Scoring Rubric:</strong><br>
+                        <strong>5 (Outstanding):</strong> 5 quality KB + 1 exam/percipio training<br>
+                        <strong>4 (Over Achieves):</strong> 4 quality KB + 1 exam/percipio training<br>
+                        <strong>3 (Always Achieves):</strong> 3 quality KB + 1 exam/percipio training<br>
+                        <strong>2 (Mostly Achieves):</strong> 2 quality KB + 1 exam/percipio training<br>
+                        <strong>1 (Not Achieving):</strong> 0-1 quality KB + 1 exam/percipio training
+                    </details>
+                </div>
+
+                <!-- G8 -->
+                <div class="goal-card">
+                    <div class="goal-header">
+                        <h3><span>8. Information Security, Data Privacy & Policy Compliance</span> <span style="color:#7f8c8d; font-size: 14px;">(5%)</span></h3>
+                        <select class="goal-input score-calc" id="g8">
+                            <option value="-">TBA / Not Graded</option>
+                            <option value="5">5 - Outstanding (0 Compromise, 0 HR Overdue, Proactive)</option>
+                            <option value="4">4 - Over Achieves (0 Compromise, 0 HR Overdue)</option>
+                            <option value="3">3 - Always Achieves (0 Compromise, With HR overdue)</option>
+                            <option value="2">2 - Mostly Achieves (With Compromise, With HR overdue)</option>
+                            <option value="1">1 - Not Achieving (Business Impact - not simulation)</option>
+                        </select>
+                    </div>
+                    <details>
+                        <summary>View Goal Details & Context</summary>
+                        <strong>Description:</strong> Ensure compliance with Information Security, Data Privacy, and internal policies through strong awareness, responsible behaviour, and adherence to required standards.<br><br>
+                        <strong>Measures of success:</strong>
+                        <ul>
+                            <li>< 10% compromise rate in end‑of‑year phishing or attack simulations.</li>
+                            <li>Zero confirmed breaches or violations of Information Security, Data Privacy, or internal policy requirements.</li>
+                            <li>100% completion of mandatory compliance training, including InfoSec, Data Privacy, and other required policy training.</li>
+                            <li>Consistent compliance with internal policies and procedures, including acceptable use, data handling, access control, and confidentiality requirements.</li>
+                            <li>Active participation in compliance and awareness initiatives when required.</li>
+                        </ul>
+                        <strong>Scoring Rubric:</strong><br>
+                        <strong>5 (Outstanding):</strong> 0 Compromise Rate EOY, 0 HR Connect Overdue, Proactive share potential security Risk<br>
+                        <strong>4 (Over Achieves):</strong> 0 Compromise Rate EOY and 0 HR Connect Overdue<br>
+                        <strong>3 (Always Achieves):</strong> 0 Compromise Rate EOY but With HRConnect overdue<br>
+                        <strong>2 (Mostly Achieves):</strong> With compromise Rate EOY, With HRConnect overdue<br>
+                        <strong>1 (Not Achieving):</strong> With Business Impact (not simulation)
+                    </details>
+                </div>
             </div>
+
+            <button class="btn" onclick="saveRecord()">Save Evaluation Record</button>
         </div>
 
-        <!-- ================= LOWER SECTION: HISTORY DASHBOARD ================= -->
+        <!-- LOWER SECTION: HISTORY DASHBOARD -->
         <div class="lower-section">
             <div class="history-header">
                 <h2>Employee History Dashboard</h2>
                 <select id="historySelect" class="history-select">
-                    <option value="">-- Select Employee --</option>
+                    <option value="">🔒 Hide Dashboard (Privacy)</option>
                 </select>
             </div>
             
-            <div id="historyDisplay">
-                <div class="empty-state">Select an employee from the dropdown above to view their monthly summaries.</div>
-            </div>
+            <div id="historyDisplay"></div>
         </div>
-
+        
+        <!-- VISUAL WATERMARK -->
+        <div style="text-align: center; margin-top: 50px; border-top: 2px solid #3498db; padding-top: 20px;">
+            <span style="font-size: 18px; font-weight: bold; color: #2c3e50;">Developed by Arvs</span><br>
+            <span style="font-size: 13px; color: #7f8c8d;">ITOPS MNL</span>
+        </div>
     </div>
 
     <script>
-        const monthOrder = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        // --- APP METADATA & EASTER EGG ---
+        console.log("%c⚙️ Smart Shift Generator Active", "color: #3498db; font-size: 16px; font-weight: bold;");
+        console.log("Developed by Arvs for Project Operations Nexus.");
+        console.log("Unauthorized distribution is prohibited.");
 
+        // --- DIGITAL FINGERPRINT ---
+        const _appManifest = {
+            author: "Arvs",
+            title: "24/7 Smart Shift Engine",
+            buildId: "PON-CBS-2026",
+            location: "Manila, Philippines",
+            isOriginal: true
+        };
+
+        const monthOrder = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
         const inputs = document.querySelectorAll('.score-calc');
         inputs.forEach(input => input.addEventListener('change', calculateScore));
-
-        const getV = id => parseFloat(document.getElementById(id).value) || 0;
+        const getV = id => document.getElementById(id).value;
 
         function calculateScore() {
-            const g4Score = (getV('g4a') * 0.4) + (getV('g4b') * 0.3) + (getV('g4c') * 0.3);
-            document.getElementById('kpiSubScore').innerText = g4Score > 0 ? g4Score.toFixed(2) : '0.00';
+            let earned = 0;
+            let activeWeight = 0;
 
-            const finalScore = 
-                (getV('g1') * 0.10) + (getV('g2') * 0.10) + (getV('g3') * 0.05) + 
-                (g4Score * 0.45) + (getV('g5') * 0.10) + (getV('g6') * 0.05) + 
-                (getV('g7') * 0.10) + (getV('g8') * 0.05);
+            const g1 = getV('g1');
+            if (["1","2","3","4","5"].includes(g1)) { earned += parseInt(g1) * 0.10; activeWeight += 0.10; }
 
-            document.getElementById('finalScoreDisplay').innerText = finalScore.toFixed(2);
+            const g2 = getV('g2');
+            if (["1","2","3","4","5"].includes(g2)) { earned += parseInt(g2) * 0.10; activeWeight += 0.10; }
 
-            let text = "Not Rated";
+            const g3 = getV('g3');
+            if (["1","2","3","4","5"].includes(g3)) { earned += parseInt(g3) * 0.05; activeWeight += 0.05; }
+
+            const g4a = parseInt(getV('g4a')) || 0;
+            const g4b = parseInt(getV('g4b')) || 0;
+            const g4c = parseInt(getV('g4c')) || 0;
+            let kpiSub = 0;
+            if (g4a > 0 || g4b > 0 || g4c > 0) {
+                kpiSub = (g4a * 0.4) + (g4b * 0.3) + (g4c * 0.3);
+                if (kpiSub > 0) {
+                    earned += kpiSub * 0.50;
+                    activeWeight += 0.50;
+                }
+            }
+            document.getElementById('kpiSubScore').innerText = kpiSub > 0 ? kpiSub.toFixed(2) : '0.00';
+
+            const g5 = getV('g5');
+            if (["1","2","3","4","5"].includes(g5)) { earned += parseInt(g5) * 0.10; activeWeight += 0.10; }
+
+            const g6 = getV('g6');
+            if (["1","2","3","4","5"].includes(g6)) { earned += parseInt(g6) * 0.05; activeWeight += 0.05; }
+
+            const g7 = getV('g7');
+            if (["1","2","3","4","5"].includes(g7)) { earned += parseInt(g7) * 0.05; activeWeight += 0.05; }
+
+            const g8 = getV('g8');
+            if (["1","2","3","4","5"].includes(g8)) { earned += parseInt(g8) * 0.05; activeWeight += 0.05; }
+
+            let finalScore = 0;
+            if (activeWeight > 0) finalScore = earned / activeWeight;
+
+            document.getElementById('finalScoreDisplay').innerText = finalScore > 0 ? finalScore.toFixed(2) : '0.00';
+
+            let text = "Not Rated / Pending";
             if(finalScore >= 4.5) text = "Outstanding (5)";
-            else if(finalScore >= 3.5) text = "Over Achieves Expectations (4)";
-            else if(finalScore >= 2.5) text = "Always Achieves Expectations (3)";
-            else if(finalScore >= 1.5) text = "Mostly Achieves Expectations (2)";
-            else if(finalScore > 0) text = "Not Achieving Expectations (1)";
+            else if(finalScore >= 3.5) text = "Over Achieves (4)";
+            else if(finalScore >= 2.5) text = "Always Achieves (3)";
+            else if(finalScore >= 1.5) text = "Mostly Achieves (2)";
+            else if(finalScore > 0) text = "Not Achieving (1)";
             
             document.getElementById('gradeText').innerText = text;
         }
@@ -409,22 +491,12 @@
         function saveRecord() {
             const name = document.getElementById('empName').value.trim();
             const month = document.getElementById('evalMonth').value;
-            const score = document.getElementById('finalScoreDisplay').innerText;
-            const kpiSub = document.getElementById('kpiSubScore').innerText;
-            const gradeText = document.getElementById('gradeText').innerText;
-
-            if(!name || !month || score === "0.00") {
-                alert("Please type a Name, select a Month, and enter grades before saving.");
-                return;
-            }
+            if(!name || !month) { alert("Please type an Employee Name and select a Month."); return; }
 
             const record = {
-                id: Date.now(),
-                name: name,
-                month: month,
-                score: score,
-                kpi: kpiSub,
-                grade: gradeText,
+                id: Date.now(), name: name, month: month, 
+                score: document.getElementById('finalScoreDisplay').innerText,
+                grade: document.getElementById('gradeText').innerText,
                 raw: {
                     g1: getV('g1'), g2: getV('g2'), g3: getV('g3'),
                     g4a: getV('g4a'), g4b: getV('g4b'), g4c: getV('g4c'),
@@ -434,122 +506,106 @@
 
             let db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
             const existingIndex = db.findIndex(r => r.name.toLowerCase() === name.toLowerCase() && r.month === month);
-            if (existingIndex >= 0) {
-                db[existingIndex] = record; 
-            } else {
-                db.push(record);
-            }
-
+            if (existingIndex >= 0) db[existingIndex] = record; else db.push(record);
             localStorage.setItem('cbsc_evals', JSON.stringify(db));
+            
             updateHistoryDropdown();
             document.getElementById('historySelect').value = name;
             renderHistoryCards(name);
-            alert(`Saved ${name}'s ${month} evaluation!`);
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+            alert(`Saved!`);
+        }
+
+        function updateHistoryDropdown() {
+            const db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
+            const names = [...new Set(db.map(r => r.name))].sort((a,b)=>a.localeCompare(b));
+            const select = document.getElementById('historySelect');
+            const currentVal = select.value;
+            select.innerHTML = '<option value="">🔒 Hide Dashboard (Privacy)</option>';
+            names.forEach(name => { select.innerHTML += `<option value="${name}">${name}</option>`; });
+            if(names.includes(currentVal)) select.value = currentVal;
         }
 
         document.getElementById('historySelect').addEventListener('change', function() {
             renderHistoryCards(this.value);
         });
 
-        function updateHistoryDropdown() {
-            const db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
-            const names = [...new Set(db.map(r => r.name))].sort((a, b) => a.localeCompare(b));
-            const select = document.getElementById('historySelect');
-            const currentVal = select.value;
-            select.innerHTML = '<option value="">-- Select Employee --</option>';
-            names.forEach(name => { select.innerHTML += `<option value="${name}">${name}</option>`; });
-            if(names.includes(currentVal)) { select.value = currentVal; }
-        }
-
         function renderHistoryCards(name) {
             const display = document.getElementById('historyDisplay');
-            if(!name) {
-                display.innerHTML = '<div class="empty-state">Select an employee from the dropdown above to view their monthly summaries.</div>';
+            
+            // Privacy Feature: Hide table entirely if no name is selected
+            if(!name || name === "") {
+                display.innerHTML = '';
                 return;
             }
 
             const db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
             const userRecords = db.filter(r => r.name === name);
-            userRecords.sort((a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
+            userRecords.sort((a,b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month));
 
-            if(userRecords.length === 0) {
-                display.innerHTML = `<div class="empty-state">No records found for ${name}.</div>`;
-                return;
-            }
+            let headers = `<tr><th>Goals & Metrics</th><th>Weight</th>`;
+            userRecords.forEach(rec => { headers += `<th>${rec.month}</th>`; });
+            headers += `</tr>`;
 
-            let html = '<div class="month-grid">';
+            let rowScore = `<tr><td style="background:#2c3e50; color:white;">ACTIVE WEIGHTED SCORE</td><td style="background:#2c3e50; color:white;">-</td>`;
+            let rowG1 = `<tr><td>1. Customer Success</td><td>10%</td>`;
+            let rowG2 = `<tr><td>2. Purpose Driven Culture: Enhanced CBS Employee Engagement</td><td>10%</td>`;
+            let rowG3 = `<tr><td>3. We Truly Care: Support CSR Programs (i.e. KSEM)</td><td>5%</td>`;
+            
+            let rowKpiHeader = `<tr><td style="background:#e8f4f8; font-weight:bold;">4. KPI Delivery Accountability</td><td style="background:#e8f4f8; font-weight:bold;">50%</td>`;
+            
+            let rowG4a = `<tr><td style="padding-left: 30px; font-weight: normal;">- Operational Accuracy & Risk Management</td><td>40%</td>`;
+            let rowG4b = `<tr><td style="padding-left: 30px; font-weight: normal;">- Ticket Management</td><td>30%</td>`;
+            let rowG4c = `<tr><td style="padding-left: 30px; font-weight: normal;">- Ticket Quality</td><td>30%</td>`;
+            let rowG5 = `<tr><td>5. Transformation (Change Adoption & Ways of Working)</td><td>10%</td>`;
+            let rowG6 = `<tr><td>6. Service Improvement, Operational Excellence & Risk Reduction</td><td>5%</td>`;
+            let rowG7 = `<tr><td>7. Capability Development & Knowledge Enablement</td><td>5%</td>`;
+            let rowG8 = `<tr><td>8. Information Security, Data Privacy & Policy Compliance</td><td>5%</td>`;
+            let rowActions = `<tr><td>Actions</td><td>-</td>`;
+
             userRecords.forEach(rec => {
-                html += `
-                    <div class="month-card">
-                        <div class="month-title">${rec.month} Summary</div>
-                        <div class="month-score">${rec.score}</div>
-                        <div class="month-grade">${rec.grade}</div>
-                        
-                        <div class="mini-breakdown">
-                            <div>1. Customer Success: <span>${rec.raw.g1}</span></div>
-                            <div>2. Purpose Driven Culture: Enhanced CBS Employee Engagement (as Members): <span>${rec.raw.g2}</span></div>
-                            <div>3. We Truly Care: Support CSR Programs (i.e. KSEM): <span>${rec.raw.g3}</span></div>
-                            <div style="border-top:1px solid #ddd; padding-top:10px; margin-top:5px; font-weight:bold; color: #c00000;">
-                                4. KPI Delivery Accountability (Sub-Score): <span>${rec.kpi}</span>
-                            </div>
-                            <div style="color:#555; padding-bottom:10px; border-bottom:1px solid #ddd; margin-bottom:5px; line-height: 1.6;">
-                                Operational Accuracy & Risk Management: <span>${rec.raw.g4a}</span><br>
-                                Ticket Management: <span>${rec.raw.g4b}</span><br>
-                                Ticket Quality: <span>${rec.raw.g4c}</span>
-                            </div>
-                            <div>5. Transformation (Change Adoption & Ways of Working): <span>${rec.raw.g5}</span></div>
-                            <div>6. Service Improvement, Operational Excellence & Risk Reduction: <span>${rec.raw.g6}</span></div>
-                            <div>7. Capability Development & Knowledge Enablement: <span>${rec.raw.g7}</span></div>
-                            <div>8. Information Security, Data Privacy & Policy Compliance: <span>${rec.raw.g8}</span></div>
-                        </div>
-
-                        <div class="card-actions">
-                            <button class="btn-edit" onclick="editRecord('${rec.name}', '${rec.month}')">Edit Data in Form</button>
-                            <button class="btn-delete" onclick="deleteRecord(${rec.id}, '${rec.name}')">Delete Record</button>
-                        </div>
-                    </div>
-                `;
+                rowScore += `<td style="background:#2c3e50; color:white;"><span style="font-size: 20px; font-weight: bold; color: #ffd700;">${rec.score}</span><br><span style="font-size: 10px; opacity: 0.8;">${rec.grade}</span></td>`;
+                rowG1 += `<td>${rec.raw.g1}</td>`;
+                rowG2 += `<td>${rec.raw.g2}</td>`;
+                rowG3 += `<td>${rec.raw.g3}</td>`;
+                rowKpiHeader += `<td style="background:#e8f4f8;"></td>`; // Empty column to keep table clean
+                rowG4a += `<td>${rec.raw.g4a !== "0" && rec.raw.g4a !== "-" ? rec.raw.g4a : "-"}</td>`;
+                rowG4b += `<td>${rec.raw.g4b !== "0" && rec.raw.g4b !== "-" ? rec.raw.g4b : "-"}</td>`;
+                rowG4c += `<td>${rec.raw.g4c !== "0" && rec.raw.g4c !== "-" ? rec.raw.g4c : "-"}</td>`;
+                rowG5 += `<td>${rec.raw.g5}</td>`;
+                rowG6 += `<td>${rec.raw.g6}</td>`;
+                rowG7 += `<td>${rec.raw.g7}</td>`;
+                rowG8 += `<td>${rec.raw.g8}</td>`;
+                rowActions += `<td><button class="btn-edit" onclick="editRec('${rec.name}','${rec.month}')">Edit</button></td>`;
             });
-            html += '</div>';
-            display.innerHTML = html;
+
+            display.innerHTML = `<div class="table-wrapper"><table class="history-table">${headers}${rowScore}${rowG1}${rowG2}${rowG3}${rowKpiHeader}${rowG4a}${rowG4b}${rowG4c}${rowG5}${rowG6}${rowG7}${rowG8}${rowActions}</table></div>`;
         }
 
-        function editRecord(name, month) {
+        function editRec(name, month) {
             const db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
-            const record = db.find(r => r.name === name && r.month === month);
-            
-            if(record) {
-                document.getElementById('empName').value = record.name;
-                document.getElementById('evalMonth').value = record.month;
-                document.getElementById('g1').value = record.raw.g1;
-                document.getElementById('g2').value = record.raw.g2;
-                document.getElementById('g3').value = record.raw.g3;
-                document.getElementById('g4a').value = record.raw.g4a;
-                document.getElementById('g4b').value = record.raw.g4b;
-                document.getElementById('g4c').value = record.raw.g4c;
-                document.getElementById('g5').value = record.raw.g5;
-                document.getElementById('g6').value = record.raw.g6;
-                document.getElementById('g7').value = record.raw.g7;
-                document.getElementById('g8').value = record.raw.g8;
+            const r = db.find(rec => rec.name === name && rec.month === month);
+            if(r) {
+                document.getElementById('empName').value = r.name;
+                document.getElementById('evalMonth').value = r.month;
+                document.getElementById('g1').value = r.raw.g1;
+                document.getElementById('g2').value = r.raw.g2;
+                document.getElementById('g3').value = r.raw.g3;
+                document.getElementById('g4a').value = r.raw.g4a !== "-" ? r.raw.g4a : "-";
+                document.getElementById('g4b').value = r.raw.g4b !== "-" ? r.raw.g4b : "-";
+                document.getElementById('g4c').value = r.raw.g4c !== "-" ? r.raw.g4c : "-";
+                document.getElementById('g5').value = r.raw.g5;
+                document.getElementById('g6').value = r.raw.g6;
+                document.getElementById('g7').value = r.raw.g7;
+                document.getElementById('g8').value = r.raw.g8;
                 calculateScore();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
-        function deleteRecord(id, name) {
-            if(confirm("Are you sure you want to delete this month's evaluation?")) {
-                let db = JSON.parse(localStorage.getItem('cbsc_evals')) || [];
-                db = db.filter(rec => rec.id !== id);
-                localStorage.setItem('cbsc_evals', JSON.stringify(db));
-                renderHistoryCards(name);
-            }
-        }
-
         window.onload = function() {
             updateHistoryDropdown();
-            calculateScore();
-        };
+            renderHistoryCards(document.getElementById('historySelect').value); // Ensure it respects privacy on load
+        }
     </script>
 </body>
 </html>
